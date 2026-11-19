@@ -1,0 +1,28 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Data, audio and model outputs (large; reproducible from scripts)
+data/
+artifacts/
+*.wav
+*.flac
+*.mp3
+*.m4a
+
+# Secrets
+.env
+
+# Local issue tracker scratch stays in git (see docs/agents/issue-tracker.md)
+
+# Web app
+apps/web/node_modules/
+apps/web/dist/
+
+# recorder package for teammates (scripts/make_recorder_bundle.py)
+/dist/
+
+# Claude Code local tool config (agent definitions, local settings)
+.claude/

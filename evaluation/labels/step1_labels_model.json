@@ -1,0 +1,227 @@
+{
+ "A1": {
+  "meeting": "ES2004a",
+  "item_id": "m1",
+  "type": "metric",
+  "verifier_status": "verified"
+ },
+ "A2": {
+  "meeting": "TS3003c",
+  "item_id": "a1",
+  "type": "action",
+  "verifier_status": "verified"
+ },
+ "A3": {
+  "meeting": "ES2004a",
+  "item_id": "m3",
+  "type": "metric",
+  "verifier_status": "verified"
+ },
+ "A4": {
+  "meeting": "TS3003b",
+  "item_id": "m16",
+  "type": "metric",
+  "verifier_status": "verified"
+ },
+ "A5": {
+  "meeting": "TS3003b",
+  "item_id": "d8",
+  "type": "decision",
+  "verifier_status": "needs_review"
+ },
+ "A6": {
+  "meeting": "ES2004a",
+  "item_id": "d1",
+  "type": "decision",
+  "verifier_status": "verified"
+ },
+ "A7": {
+  "meeting": "IS1009c",
+  "item_id": "d3",
+  "type": "decision",
+  "verifier_status": "verified"
+ },
+ "A8": {
+  "meeting": "TS3003b",
+  "item_id": "a2",
+  "type": "action",
+  "verifier_status": "verified"
+ },
+ "A9": {
+  "meeting": "TS3003a",
+  "item_id": "a4",
+  "type": "action",
+  "verifier_status": "verified"
+ },
+ "A10": {
+  "meeting": "ES2004c",
+  "item_id": "d5",
+  "type": "decision",
+  "verifier_status": "verified"
+ },
+ "A11": {
+  "meeting": "TS3003b",
+  "item_id": "d2",
+  "type": "decision",
+  "verifier_status": "verified"
+ },
+ "A12": {
+  "meeting": "ES2004b",
+  "item_id": "m3",
+  "type": "metric",
+  "verifier_status": "verified"
+ },
+ "A13": {
+  "meeting": "IS1009b",
+  "item_id": "d2",
+  "type": "decision",
+  "verifier_status": "verified"
+ },
+ "A14": {
+  "meeting": "IS1009c",
+  "item_id": "d7",
+  "type": "decision",
+  "verifier_status": "verified"
+ },
+ "A15": {
+  "meeting": "IS1009d",
+  "item_id": "d4",
+  "type": "decision",
+  "verifier_status": "verified"
+ },
+ "A16": {
+  "meeting": "IS1009c",
+  "item_id": "a5",
+  "type": "action",
+  "verifier_status": "verified"
+ },
+ "A17": {
+  "meeting": "IS1009b",
+  "item_id": "m5",
+  "type": "metric",
+  "verifier_status": "needs_review"
+ },
+ "A18": {
+  "meeting": "TS3003c",
+  "item_id": "d8",
+  "type": "decision",
+  "verifier_status": "needs_review"
+ },
+ "A19": {
+  "meeting": "TS3003d",
+  "item_id": "m17",
+  "type": "metric",
+  "verifier_status": "needs_review"
+ },
+ "A20": {
+  "meeting": "TS3003a",
+  "item_id": "a1",
+  "type": "action",
+  "verifier_status": "needs_review"
+ },
+ "A21": {
+  "meeting": "TS3003b",
+  "item_id": "m20",
+  "type": "metric",
+  "verifier_status": "verified"
+ },
+ "A22": {
+  "meeting": "TS3003d",
+  "item_id": "d6",
+  "type": "decision",
+  "verifier_status": "needs_review"
+ },
+ "A23": {
+  "meeting": "ES2004b",
+  "item_id": "a4",
+  "type": "action",
+  "verifier_status": "needs_review"
+ },
+ "A24": {
+  "meeting": "TS3003b",
+  "item_id": "a1",
+  "type": "action",
+  "verifier_status": "verified"
+ },
+ "A25": {
+  "meeting": "ES2004c",
+  "item_id": "a2",
+  "type": "action",
+  "verifier_status": "verified"
+ },
+ "B1": {
+  "meeting": "TS3003a",
+  "human_id": "h7",
+  "judge": "missed"
+ },
+ "B2": {
+  "meeting": "IS1009d",
+  "human_id": "h6",
+  "judge": "covered"
+ },
+ "B3": {
+  "meeting": "ES2004d",
+  "human_id": "h8",
+  "judge": "covered"
+ },
+ "B4": {
+  "meeting": "ES2004d",
+  "human_id": "h2",
+  "judge": "missed"
+ },
+ "B5": {
+  "meeting": "TS3003b",
+  "human_id": "h4",
+  "judge": "covered"
+ },
+ "B6": {
+  "meeting": "ES2004d",
+  "human_id": "h5",
+  "judge": "covered"
+ },
+ "B7": {
+  "meeting": "IS1009b",
+  "human_id": "h4",
+  "judge": "covered"
+ },
+ "B8": {
+  "meeting": "TS3003c",
+  "human_id": "h11",
+  "judge": "covered"
+ },
+ "B9": {
+  "meeting": "TS3003b",
+  "human_id": "h6",
+  "judge": "partial"
+ },
+ "B10": {
+  "meeting": "TS3003c",
+  "human_id": "h6",
+  "judge": "covered"
+ },
+ "B11": {
+  "meeting": "TS3003d",
+  "human_id": "h10",
+  "judge": "partial"
+ },
+ "B12": {
+  "meeting": "TS3003b",
+  "human_id": "h12",
+  "judge": "partial"
+ },
+ "B13": {
+  "meeting": "IS1009c",
+  "human_id": "h4",
+  "judge": "covered"
+ },
+ "B14": {
+  "meeting": "IS1009b",
+  "human_id": "h2",
+  "judge": "covered"
+ },
+ "B15": {
+  "meeting": "TS3003b",
+  "human_id": "h11",
+  "judge": "partial"
+ }
+}

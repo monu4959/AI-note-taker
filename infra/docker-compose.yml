@@ -1,0 +1,25 @@
+# Postgres + pgvector for the notetaker. The API and GPU worker run natively (Windows GPU).
+# Port 5434 on the host (5433 is used by another local project).
+# Usage: docker compose -f infra/docker-compose.yml up -d
+name: meeting-intel
+
+services:
+  db:
+    image: pgvector/pgvector:0.8.1-pg17
+    environment:
+      POSTGRES_USER: notetaker
+      POSTGRES_PASSWORD: notetaker
+      POSTGRES_DB: notetaker
+    ports:
+      - "127.0.0.1:5434:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U notetaker -d notetaker"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+volumes:
+  pgdata:

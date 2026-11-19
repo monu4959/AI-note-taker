@@ -1,0 +1,53 @@
+[project]
+name = "meeting-intel"
+version = "0.1.0"
+description = "Meeting intelligence pipeline: live captions, diarized transcripts, speaker ID and cited insights"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "anthropic>=2.10.0",
+    "fastapi>=0.163.2",
+    "faster-whisper>=1.2.1",
+    "jiwer>=4.0.0",
+    "meeteval>=0.4.3",
+    "pandas>=3.1.1",
+    "psycopg[binary]>=3.3.9",
+    "pyannote-audio>=4",
+    "python-dotenv>=1.2.4",
+    "python-multipart>=0.0.34",
+    "soundcard>=0.4.6",
+    "soundfile>=0.14.0",
+    "torch",
+    "torchaudio",
+    "uvicorn[standard]>=0.54.0",
+    "whisper-normalizer>=1.0.1",
+]
+# Dependencies are added per step with `uv add`, so each one is deliberate.
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "ruff",
+    "ipykernel",
+    "httpx>=0.28.1",
+    "playwright>=1.65.2",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.extra-build-variables]
+# meeteval ships source only and uses C++20 designated initializers; MSVC defaults to C++14.
+meeteval = { CL = "/std:c++20" }
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+torchaudio = { index = "pytorch-cu128" }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
