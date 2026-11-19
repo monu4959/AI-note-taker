@@ -1,3 +1,7 @@
+
+
+https://github.com/user-attachments/assets/f4103108-3ec1-4a7c-a707-26a7b914163e
+
 # Notetaker
 
 Record a Zoom or Teams call on your computer (or upload a recording) and get a
