@@ -57,3 +57,11 @@ def test_not_found_passes_through(monkeypatch):
     monkeypatch.setattr(llm, "parse", parse)
     r = ask.ask("m1", "Planning", ROWS, SPEAKERS, None, "Hiring?", [])
     assert r["found"] is False and r["parts"][0]["utterance_ids"] == []
+
+
+def test_a_name_written_beside_its_label_is_not_shown_twice(monkeypatch):
+    parse, _ = _fake(parts=(("SPEAKER_00 (Priya) set it; SPEAKER_01 (the designer) agreed.", ["u0031"]),))
+    monkeypatch.setattr(llm, "PROVIDER", "claude")
+    monkeypatch.setattr(llm, "parse", parse)
+    r = ask.ask("m1", "Planning", ROWS, SPEAKERS, None, "Who set the budget?")
+    assert r["parts"][0]["text"] == "SPEAKER_00 set it; SPEAKER_01 (the designer) agreed."

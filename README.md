@@ -1,8 +1,6 @@
-
-
-https://github.com/user-attachments/assets/f4103108-3ec1-4a7c-a707-26a7b914163e
-
 # Notetaker
+
+[![CI](https://github.com/monu4959/AI-note-taker/actions/workflows/ci.yml/badge.svg)](https://github.com/monu4959/AI-note-taker/actions/workflows/ci.yml)
 
 Record a Zoom or Teams call on your computer (or upload a recording) and get a
 speaker-labelled transcript and notes organised by topic: what was discussed, what was decided,
@@ -10,9 +8,18 @@ the questions asked (with who answered and what they said), then action items an
 open. Every note cites the lines it came from, is checked against them before it is shown, and
 plays that moment of the audio when clicked.
 
+**Demo (4:44)**: uploading a 64-minute Zoom call, the notes, asking it questions, then recording
+a call live.
+
+https://github.com/user-attachments/assets/f4103108-3ec1-4a7c-a707-26a7b914163e
+
 **Ask the meeting:** each meeting has an Ask tab for questions the notes don't cover ("what did
 we say the budget was?", "who is doing the LinkedIn part?"). Answers come only from that
 meeting, cite their lines, and say so when something wasn't discussed (`pipeline/ask.py`).
+
+| Notes by topic, with the questions asked | Ask the meeting |
+|---|---|
+| ![Notes for an AMI test meeting](docs/images/notes.png) | ![Ask tab answering from the transcript](docs/images/ask.png) |
 
 Speakers get real names: from voices you chose to remember (recognised in later meetings) or
 from introductions in the transcript, which you confirm. Unclear speakers stay unnamed.
@@ -52,7 +59,8 @@ Design: `Meeting-Intelligence-Pipeline-Design.pdf`.
 | Cost, Ask | Sonnet 5.5 reads the whole meeting, prompt-cached | ~$0.045 first question, ~$0.004 follow-ups (1 h meeting) | |
 | Cost, local notes (Qwen 2.5 7B) | notes written on the server's GPU | $0; ~12 min per meeting hour | quality not yet graded (reports/step4.md) |
 
-Prompts were tuned on 3 AMI dev meetings and frozen before the test run. Repeating a run moves
+The notes rows were measured with notes prompt v2 (decisions, actions, problems, numbers),
+before the current v3 layout by topic with Q&A; v3 has not been re-scored yet. Prompts were tuned on 3 AMI dev meetings and frozen before the test run. Repeating a run moves
 scores by 5–12 points on 3 meetings, so small differences are noise. Precision against AMI is
 only a lower bound (its summaries are incomplete); hand-labelled precision is in
 `reports/step1.md`. Details: `reports/step0.md`, `reports/step1.md`, `reports/step2.md`, `reports/step3.md`.
@@ -106,6 +114,27 @@ Recording notes: keep the call's sound on (muting Zoom's speaker also mutes the 
 and pause music, since everything the computer plays is recorded. If the API stops mid-call
 (crash, reboot), the audio so far is kept and offered as "cut short" on the next start.
 
+## How I built this
+
+I used Claude Code (Anthropic's coding agent) as a pair programmer throughout: it wrote most of
+the code and the reports, from my direction and review. The parts I owned:
+
+- **Scope and design.** I started from the design doc in this repo, then changed it where real
+  use disagreed: a Granola-style desktop recorder instead of live captions or a meeting bot,
+  because I attend calls rather than host them (`docs/adr/0001-...`); notes organised by topic
+  with the questions asked, because the first version over-weighted numbers.
+- **Measuring before trusting.** Every step had a pass/fail gate decided up front. I checked
+  the diarization scoring against the published AMI number before tuning anything, picked the
+  voice-matching threshold for precision (no stranger named) over coverage, and froze prompts on
+  dev meetings before the test run.
+- **Guardrails.** A spend cap per budget, voiceprints only with consent, citations checked in
+  code before a second model judges them, and a free local mode where Claude is blocked in code.
+- **Reviewing.** I ran the app on my own calls and sent back what was wrong (for example, the
+  notes layout that led to v3).
+
+What I'd do next: re-score the v3 notes, test the Mac recorder on a real Mac, capture only the
+call app's audio, and add sign-in so it can move off my PC.
+
 ## Reproduce the evaluation
 
 ```sh
@@ -118,3 +147,7 @@ sh scripts/download_ami.sh                                   # 16 test meetings 
 .venv/Scripts/python scripts/step2_eval_recorder.py --you A  # recorder vs upload (needs ES2004b headsets)
 .venv/Scripts/python -m pytest
 ```
+
+## License
+
+MIT (`LICENSE`). The AMI Meeting Corpus and the pyannote and Whisper models have their own licences.

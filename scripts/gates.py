@@ -40,7 +40,7 @@ BASELINE = OUT / "ledger_baseline.json"
 
 UNIT = ["tests/test_assign.py", "tests/test_insights_checks.py", "tests/test_numbers.py",
         "tests/test_stages.py", "tests/test_speaker_id.py", "tests/test_recording.py",
-        "tests/test_llm_local.py", "tests/test_judge_calibration.py"]
+        "tests/test_llm_local.py", "tests/test_judge_calibration.py", "tests/test_ask.py"]
 INTEGRATION = ["tests/test_api.py", "tests/test_recorder.py", "tests/test_agent.py"]
 
 # G6 thresholds, fixed before looking at the test split (see reports/step4.md)

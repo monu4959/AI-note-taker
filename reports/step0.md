@@ -1,6 +1,6 @@
 # Step 0 — Baseline on AMI
 
-Date: 2026-11-17. Hardware: RTX 4060 Laptop (8 GB), 16 GB RAM, Windows 11.
+Hardware: RTX 4060 Laptop (8 GB), 16 GB RAM, Windows 11.
 
 ## Gate
 

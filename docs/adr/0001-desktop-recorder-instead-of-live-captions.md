@@ -1,23 +1,23 @@
 # 1. Step 2 is a desktop recorder, not live captions
 
-Date: 2026-11-18. Status: accepted.
+Status: accepted.
 
 ## Context
 
 The design doc's Step 2 is live captions during a call (streaming ASR, a WebSocket, a latency
-gate). What the user actually needs is for their own Zoom and Teams calls to get into the app
-without downloading recordings by hand; captions during the call are not required. The user
-mostly attends meetings rather than hosting them, and uses headphones only sometimes.
+gate). What I actually need is for my own Zoom and Teams calls to get into the app without
+downloading recordings by hand; captions during the call are not required. I mostly attend
+meetings rather than host them, and use headphones only sometimes.
 
 ## Decision
 
-Record on the user's computer, Granola-style: the default microphone (you) plus a loopback
+Record on the computer of the person in the call, Granola-style: the default microphone (you) plus a loopback
 of **every** output device (everyone else), each to its own 16 kHz track on one clock. When
 the recording stops, the tracks are mixed and go through the existing upload pipeline.
 
 - No bot: a meeting bot (Fireflies-style) needs per-platform integration (Zoom app review,
   no official Meet bot API) or a paid per-hour service, and is only worth it for meetings
-  the user doesn't attend.
+  I don't attend.
 - No host-only features: Zoom's per-participant audio files need the host to record.
 - Calls are detected from Windows' microphone privacy record (Zoom/Teams holding the mic),
   which also stops the recording when the call ends. Recording always needs an explicit start

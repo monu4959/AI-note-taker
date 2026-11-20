@@ -26,3 +26,8 @@ apps/web/dist/
 
 # Claude Code local tool config (agent definitions, local settings)
 .claude/
+
+# Personal agent workflow (issue tracker, triage labels)
+CLAUDE.local.md
+docs/agents/
+.scratch/

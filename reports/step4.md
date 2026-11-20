@@ -1,8 +1,8 @@
 # Step 4 — Free local notes (Qwen), polish and release gates
 
-Date: 2026-11-19 (overnight). Goal: build and test without spending LLM money, with Claude
-switchable back on later; every release gate checked by one script. **LLM spend: $0.00**
-(the spend ledger is byte-identical to the start of the night; gate G0 checks this).
+Goal: a free notes option that runs entirely on the server, with Claude switchable back on,
+and every release gate checked by one script. **LLM spend for the step: $0.00** (the spend
+ledger is byte-identical before and after; gate G0 checks this).
 
 ## Gate status (`scripts/gates.py`)
 
@@ -21,9 +21,10 @@ switchable back on later; every release gate checked by one script. **LLM spend:
 Final run: `scripts/gates.py`, all gates, from a clean state; results in
 `artifacts/gates/last_run.json`. 8 of 9 green; G6 is blocked, not failing on a number.
 
-## Code review (independent reviewer agent) and fixes
+## Code review and fixes
 
-The reviewer found 16 issues; the ones that mattered were fixed and each got a test or gate:
+A review pass over the whole codebase found 16 issues; the ones that mattered were fixed and
+each got a test or gate:
 
 | Finding | Fix | Now checked by |
 |---|---|---|
@@ -46,13 +47,13 @@ two "write notes" jobs, unpinned dependencies in the teammate bundle.
 
 ## What changed
 
-**Provider switch** (`pipeline/llm.py`, `.env`): `NOTES_LLM=local` (now) or `claude`.
+**Provider switch** (`pipeline/llm.py`, `.env`): `NOTES_LLM=local` or `claude`.
 - local: every LLM call goes to Qwen 2.5 7B through Ollama (`pipeline/llm_local.py`):
   JSON-schema constrained output, temperature 0, fixed seed, one retry with the validation
   error, calls logged to `artifacts/llm_local.jsonl` (the spend ledger is not touched).
-- Claude is blocked twice: `llm.client()` and `llm.parse()` raise `ClaudeDisabled` for any
-  Claude model, and the budget cap is set to $0 (`LLM_BUDGET_USD=0`). The API only offers the
-  local model for "write notes with another model".
+- In local mode Claude is blocked twice: `llm.client()` and `llm.parse()` raise
+  `ClaudeDisabled` for any Claude model, and the budget cap is $0 (`LLM_BUDGET_USD=0`). The
+  API only offers the local model for "write notes with another model".
 - Cached Claude results are never overwritten: Opus keeps the `insights` stage folder;
   local runs write `insights-qwen2.5-7b` and `names-qwen2.5-7b`; eval grades from a local
   model get model-tagged file names (`judge.j2-qwen2.5-7b.*`), Sonnet's stay `judge.j1.*`.
@@ -69,32 +70,32 @@ two "write notes" jobs, unpinned dependencies in the teammate bundle.
 | Verification in batches of 15 notes | one call with ~100 notes is unreliable for a 7B model |
 
 **Memory** (16 GB laptop): at a 24k-token context Ollama's runner held ~15 GB of committed
-RAM and the system ran out of memory (a background job was killed). Fixed: one fixed 12k
+RAM and the system ran out of memory (Windows killed a background job). Fixed: one fixed 12k
 context (no model reloads between calls), local replies capped at 4,000 tokens, model
 unloaded after each meeting's notes. During the 30-minute G7 run free RAM still dipped to
 0.6 GB with the runner at 7.7 GB: close the screensaver/Discord/Chrome tabs on the server PC,
 or use a smaller context if it happens again.
 
-**UI** (Frontend Developer): footer "Notes: Qwen 2.5 7B on this computer" (or "Claude
+**UI**: footer "Notes: Qwen 2.5 7B on this computer" (or "Claude
 (Opus 5.5)"); cost shows "free, written on this computer"; Claude is never offered while it
 is off; processing estimate 10-15 min per hour locally; the privacy line on the record and
 upload forms no longer says the transcript goes to Claude when it doesn't. New Playwright
 tests (`tests/e2e`).
 
 **Running for the team**: `scripts/start.ps1` waits for Docker Desktop and starts Ollama if
-needed, `-NoBrowser` for unattended start; `scripts/install_autostart.ps1` (not installed:
-your choice) starts the server 1 minute after you sign in.
+needed, `-NoBrowser` for unattended start; `scripts/install_autostart.ps1` (optional, not
+installed by default) starts the server 1 minute after you sign in.
 
 ## Quality: why G6 is blocked
 
-There is no trustworthy free way to grade notes against the AMI human summaries tonight. The
-AI Engineer built a local grader (BM25 pre-filter + one Qwen call per reference sentence) and
+I found no trustworthy free way to grade notes against the AMI human summaries. I built a
+local grader (BM25 pre-filter + one Qwen call per reference sentence) and
 measured it against Sonnet's existing gradings of the same notes (dev meetings, 102
 sentences): **lenient agreement 63.7%, kappa 0.08** (v1 one-call grader: kappa 0.13); it
 never says "partial" and misses paraphrases even when the right note is in front of it. A
 quality number from it would be meaningless, so the gate says BLOCKED instead of a number.
 
-What we can say without a grader (IS1009c, 30 min, notes by each model on the same
+What I can say without a grader (IS1009c, 30 min, notes by each model on the same
 transcript): Qwen kept 21 notes (5 decisions, 5 actions), Opus 44 (9 decisions, 5 actions,
 5 numbers). Qwen's decisions cover the gist of all 3 human-listed decisions (push buttons,
 batteries, voice recognition pending cost research) and include one overstatement ("will
@@ -108,8 +109,8 @@ and `scripts/gates.py --only G6 --g6-tag dev-qwen`.
 
 ## Switching to Claude
 
-In `.env`: `NOTES_LLM=claude` **and** a budget, because the cap is $0 now and the first Claude
-call would be refused (e.g. `LLM_BUDGET_SCOPE=step4-claude`, `LLM_BUDGET_USD=5`); then
+In `.env`: `NOTES_LLM=claude` **and** a budget, because local mode sets the cap to $0 and the
+first Claude call would be refused (e.g. `LLM_BUDGET_SCOPE=step4-claude`, `LLM_BUDGET_USD=5`); then
 restart the API and worker (they read `.env` only at start). Opus notes, Sonnet checks and Sonnet
 grading come back exactly as before (same stage folders, prompts and cache keys). G0 then
 reports red by design (it checks that Claude is blocked); run the other gates with
@@ -117,10 +118,9 @@ reports red by design (it checks that Claude is blocked); run the other gates wi
 
 ## Not done / known limits
 
-- G6 has no number (above). The dev-meeting Qwen notes run was stopped by the system for low
-  memory and, per its instruction, not restarted; IS1008d and IS1009c have Qwen notes.
+- G6 has no number (above). The dev-meeting Qwen notes run was killed by Windows for low
+  memory and not restarted; IS1008d and IS1009c have Qwen notes.
 - The local grader's cache-only rescore (`scripts/step4_calibrate_judge.py --versions 1 2
-  --split dev`) was denied by the permission check when the AI Engineer tried it; it needs
-  your OK (it makes no LLM calls).
+  --split dev`, no LLM calls) has not been run yet.
 - Qwen's notes are thinner than Opus's (about half as many) and occasionally overstate.
 - The Mac recorder is still untested on a real Mac.

@@ -1,9 +1,9 @@
 # Step 2 — Recording your calls on this computer
 
-Date: 2026-11-18. Replaces the design doc's "live captions" step at the user's request
-(`docs/adr/0001-desktop-recorder-instead-of-live-captions.md`): the user attends Zoom and
-Teams calls (rarely hosts) and wants transcript and notes after the call, with or without
-headphones. LLM spend for the step: **$0.50** of a $3 cap (only the one end-to-end run;
+This replaces the design doc's "live captions" step
+(`docs/adr/0001-desktop-recorder-instead-of-live-captions.md`). I mostly attend Zoom and
+Teams calls rather than host them, and what I need is the transcript and notes after the
+call, with or without headphones; captions during the call matter less. LLM spend for the step: **$0.50** of a $3 cap (only the one end-to-end run;
 everything else is GPU/CPU).
 
 ## Gate

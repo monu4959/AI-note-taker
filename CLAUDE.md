@@ -1,18 +1,28 @@
 # AI notetaker
 
-Meeting intelligence pipeline (live captions + post-meeting transcript, diarization,
-speaker ID and cited insights). Design: `Meeting-Intelligence-Pipeline-Design.pdf`.
+Meeting notetaker: record a Zoom/Teams call on this computer or upload a recording; get a
+speaker-labelled transcript, cited notes by topic (with Q&A) and an Ask tab.
+Design: `Meeting-Intelligence-Pipeline-Design.pdf`. Step-2 change from that design (desktop
+recorder instead of live captions): `docs/adr/0001-desktop-recorder-instead-of-live-captions.md`.
 
-## Agent skills
+## Layout
 
-### Issue tracker
+- `pipeline/`: audio prep, ASR (faster-whisper), diarization (pyannote), speaker naming,
+  notes (`pipeline/insights/`: segment, extract, verify, summarize), meeting Q&A (`ask.py`)
+- `services/`: FastAPI API, Postgres job queue and GPU worker, desktop recorder, teammate agent
+- `apps/web/`: React + Vite UI, built into `apps/web/dist` and served by the API
+- `evaluation/`, `scripts/`, `reports/`: AMI benchmarks, gates and one report per step
 
-Issues live as local markdown files under `.scratch/<feature>/`. See `docs/agents/issue-tracker.md`.
+## Rules
 
-### Triage labels
+- Secrets only in the gitignored `.env`; never print keys.
+- LLM spend is capped per budget scope (`LLM_BUDGET_SCOPE`, `LLM_BUDGET_USD` in `.env`).
+- Voiceprints are opt-in per person; never store one without consent.
+- The repo is public: no real people's names or recordings in commits.
 
-Default five-role vocabulary (needs-triage, needs-info, ready-for-agent, ready-for-human, wontfix), recorded as a `Status:` line in each issue file. See `docs/agents/triage-labels.md`.
+## Checks
 
-### Domain docs
-
-Single-context: one `GLOSSARY.md` and `docs/adr/` at the project root. See `docs/agents/domain.md`.
+```sh
+.venv/Scripts/python scripts/gates.py          # every gate (static, unit, integration, UI, ...)
+.venv/Scripts/python -m pytest tests --ignore=tests/e2e   # what CI runs
+```

@@ -13,6 +13,8 @@ are dropped, so every play button in an answer points at a real line.
 
 from __future__ import annotations
 
+import re
+
 from pydantic import BaseModel, Field
 
 from evaluation.local_judge import bm25_rank
@@ -21,7 +23,7 @@ from pipeline.insights.extract import format_transcript
 from pipeline.insights.prompts import TRANSCRIPT_NOTE
 from pipeline.insights.verify import render
 
-PROMPT_VERSION = 1
+PROMPT_VERSION = 2
 WINDOW, STEP = 10, 5      # local retrieval: 10-utterance stretches, overlapping by half
 LOCAL_WINDOWS = 8         # stretches the local model reads per question
 HISTORY_TURNS = 6         # earlier questions kept for follow-ups ("and who owns that?")
@@ -37,8 +39,9 @@ thing that was, if any).
 - Be direct: lead with the answer, then the needed detail. Quote numbers exactly as said.
 - Split the answer into parts of one or two sentences. Each part cites the utterance IDs that \
 support it (as few as needed). A part that only frames the answer may cite nothing.
-- Refer to people by their speaker label (e.g. SPEAKER_01) exactly as in the transcript; the \
-app shows their names. Names known so far are listed under Speakers.
+- Refer to people by their speaker label alone (e.g. SPEAKER_01), exactly as in the \
+transcript, never followed by their name: the app replaces each label with the name. Names \
+known so far are listed under Speakers.
 - The notes are a machine summary: prefer the transcript when they disagree."""
 
 
@@ -108,6 +111,17 @@ def _excerpts(utts: list[dict], picked: list[dict], title: str) -> str:
     return "\n".join(out)
 
 
+def _label_only(text: str, speakers: list[dict]) -> str:
+    """'SPEAKER_03 (Jeanne)' -> 'SPEAKER_03'. The app swaps labels for names, so a name the model
+    added beside the label would show twice ("Jeanne (Jeanne)")."""
+    names = {s["cluster_label"]: s["display_name"] for s in speakers if s.get("display_name")}
+
+    def one(m: re.Match) -> str:
+        label, name = m.group(1), m.group(2).strip()
+        return label if name.casefold() == names.get(label, "").casefold() else m.group(0)
+    return re.sub(r"(SPEAKER_\d{2}) \(([^()]{1,40})\)", one, text)
+
+
 def ask(meeting_id: str, title: str, transcript_rows: list[dict], speakers: list[dict],
         notes: dict | None, question: str, history: list[dict] | None = None) -> dict:
     """Answer one question. `history` holds earlier turns: [{"question", "answer"}]."""
@@ -139,7 +153,7 @@ def ask(meeting_id: str, title: str, transcript_rows: list[dict], speakers: list
 
     ans, rec = llm.parse(schema, model=model, system=system, messages=messages, purpose="ask",
                          meeting=meeting_id, effort="medium", max_tokens=2000)
-    parts = [{"text": p.text, "utterance_ids": [i for i in p.utterance_ids if i in allowed]}
+    parts = [{"text": _label_only(p.text, speakers), "utterance_ids": [i for i in p.utterance_ids if i in allowed]}
              for p in ans.parts if p.text.strip()]
     return {"found": ans.found, "parts": parts, "model": model,
             "cost_usd": rec.get("cost_usd", 0.0), "prompt_version": PROMPT_VERSION}

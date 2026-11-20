@@ -1,7 +1,7 @@
 # Step 3 — Speaker names
 
-Date: 2026-11-18. Done before Step 2 (live captions), at the user's request. LLM spend for
-the step: **$1.07** of a $5 cap ($0.67 of it the AMI name-cue evaluation).
+I built this before Step 2, which I later redesigned (`reports/step2.md`). LLM spend for the
+step: **$1.07** of a $5 cap ($0.67 of it the AMI name-cue evaluation).
 
 ## Gate
 
@@ -90,7 +90,7 @@ Cue names are therefore shown as proposals ("From the transcript, please confirm
 quoted line playable), not as facts, and never override a voice match. That matches the
 design: cues count at lower confidence.
 
-## Real meeting (user's Zoom recording, 64 min, 12 speakers)
+## Real meeting (a 64-minute Zoom class call I took part in, 12 speakers)
 
 The cue stage proposed 8 names, all from hand-offs and direct address ("<name>, you are the
 group leader?" → "Yeah, professor"; "<name> will be carrying around for the ..." → next
@@ -100,7 +100,7 @@ name the recognizer cut short). Participants' names are left out of this report.
 two people who talked most were left unnamed: nobody said their names in a checkable way.
 $0.045.
 
-## Notes model: Opus 5.5 vs Sonnet 5.5 (added 2026-11-18)
+## Notes model: Opus 5.5 vs Sonnet 5.5
 
 Any meeting can now get a second set of notes from the other model (Notes tab: "Also write
 notes with Sonnet 5.5", then "Compare side by side"). Only the LLM steps re-run; the

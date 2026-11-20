@@ -1,7 +1,7 @@
 # Step 1 — Offline notetaker
 
-Date: 2026-11-18. Hardware: RTX 4060 Laptop (8 GB), 16 GB RAM, Windows 11. LLM spend for the
-whole step: **$9.75** of the $15 cap.
+Hardware: RTX 4060 Laptop (8 GB), 16 GB RAM, Windows 11. LLM spend for the whole step:
+**$9.75** of the $15 cap I set for it.
 
 ## Gate
 
@@ -94,4 +94,5 @@ kept separately in `step1_labels_model.json`; scoring will compare them once the
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts\start.ps1
 ```
-Opens http://localhost:5173. Services: Postgres (Docker, :5434), API (:8000), GPU worker, web (:5173).
+Opens http://localhost:8000. Services: Postgres (Docker, :5434), API (:8000, also serves the
+built web app), GPU worker. `-Dev` adds the Vite dev server on :5173.

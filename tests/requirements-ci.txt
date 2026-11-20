@@ -1,0 +1,18 @@
+# What the tests need without a GPU: no torch, Whisper or pyannote models.
+# The full app installs from pyproject.toml with `uv sync`.
+anthropic==2.12.0
+av==19.0.2
+fastapi==0.165.0
+httpx==0.28.1
+numpy==2.5.5
+psycopg[binary]==3.3.9
+pyannote-core==6.1.0
+pydantic==2.14.4
+pytest==9.2.0
+python-dotenv==1.2.4
+python-multipart==0.0.34
+ruff==0.17.6
+scipy==1.18.1
+soundfile==0.14.0
+uvicorn==0.54.0
+whisper-normalizer==1.0.1

@@ -1,7 +1,7 @@
 [project]
 name = "meeting-intel"
 version = "0.1.0"
-description = "Meeting intelligence pipeline: live captions, diarized transcripts, speaker ID and cited insights"
+description = "Meeting notetaker: record or upload calls, speaker-labelled transcripts, speaker names, cited notes and Q&A"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "anthropic>=2.10.0",

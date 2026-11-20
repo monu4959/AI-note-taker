@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  python:
+    name: Lint, unit and integration tests
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: pgvector/pgvector:0.8.1-pg17
+        env:
+          POSTGRES_USER: notetaker
+          POSTGRES_PASSWORD: notetaker
+          POSTGRES_DB: notetaker_test
+        ports:
+          - 5434:5432
+        options: >-
+          --health-cmd "pg_isready -U notetaker -d notetaker_test"
+          --health-interval 5s --health-timeout 3s --health-retries 20
+    env:
+      NOTES_LLM: local          # the tests never call Claude; no API key in CI
+      LLM_BUDGET_USD: "0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+          activate-environment: true
+      - run: uv pip install -r tests/requirements-ci.txt
+      - name: Lint
+        run: ruff check --select F,E9 pipeline services evaluation scripts tests
+      - name: Tests (no GPU; Postgres in a service container)
+        run: python -m pytest -q -p no:cacheprovider tests --ignore=tests/e2e
+
+  web:
+    name: Web app type check and build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - run: npm ci
+      - run: npm run build
